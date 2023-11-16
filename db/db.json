@@ -1,1 +1,1 @@
-[{"title":"This is a test","text":"Test this please ","id":"698ff95a-e2c6-4ca1-91e0-629fcbcf3b5b"}]
+[{"title":"This is a test","text":"Test this please ","id":"698ff95a-e2c6-4ca1-91e0-629fcbcf3b5b"},{"title":"Working?","text":"This note is to test if it is working when I local host the app via node server.js. It appears to be doing just that, unsure why Heroku not taking updated information.\n","id":"2a8c1e98-62f5-4baa-ae3a-cedfe3f56574"}]
