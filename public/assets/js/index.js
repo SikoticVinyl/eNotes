@@ -36,14 +36,21 @@ const getNotes = () =>
     }
   });
 
-const saveNote = (note) =>
-  fetch('/api/notes', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(note)
-  });
+  const { v4: uuidv4 } = require('uuid');
+
+  const saveNote = (note) => {
+    // Generate a unique ID for the note using uuidv4
+    note.id = uuidv4();
+  
+    // Make the POST request with the note including the generated id
+    return fetch('/api/notes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(note)
+    });
+  };
 
 const deleteNote = (id) =>
   fetch(`/api/notes/${id}`, {
@@ -60,12 +67,14 @@ const renderActiveNote = () => {
   hide(clearBtn);
  
   if (activeNote.id) {
+    console.log("activeNote ID: "+activeNote.id);
     show(newNoteBtn);
     noteTitle.removeAttribute('readonly');
     noteText.removeAttribute('readonly');
     noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
   } else {
+    console.log("Else");
     hide(newNoteBtn);
     noteTitle.value = '';
     noteText.value = '';
@@ -117,7 +126,7 @@ const handleNoteView = (e) => {
 
     // Update the activeNote with the clicked note's data
     activeNote = { ...clickedNoteData };
-    console.log(activeNote); // Check the activeNote object in the console
+    console.log("Active Note:", activeNote);  // Check the activeNote object in the console
 
     // Render the active note in the right-hand column
     renderActiveNote();
