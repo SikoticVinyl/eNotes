@@ -59,16 +59,19 @@ app.get('/api/notes', (req, res) => {
         return;
       }
   
-      let notes = JSON.parse(data);
-      notes.push(newNote);
+    let notes = JSON.parse(data);
+      // Generate a unique ID for the new note using uuidv4
+    newNote.id = uuidv4();
+    
+    notes.push(newNote);
   
-      fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes), (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).json({ error: 'Error saving note' });
-          return;
-        }
-        res.json(newNote);
-      });
+    fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes), (err) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error saving note' });
+        return;
+      }
+    res.json(newNote);
     });
-  });
+    });
+});
