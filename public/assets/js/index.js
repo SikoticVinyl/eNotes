@@ -1,9 +1,11 @@
+document.addEventListener('DOMContentLoaded', () => {
 let noteForm;
 let noteTitle;
 let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
+let clearBtn;
 
 if (window.location.pathname === '/notes') {
   noteForm = document.querySelector('.note-form');
@@ -36,11 +38,9 @@ const getNotes = () =>
     }
   });
 
-  const { v4: uuidv4 } = require('uuid');
-
   const saveNote = (note) => {
     // Generate a unique ID for the note using uuidv4
-    note.id = uuidv4();
+    note.id = uuidv4(); // Using the globally available uuidv4 function
   
     // Make the POST request with the note including the generated id
     return fetch('/api/notes', {
@@ -86,7 +86,8 @@ const renderActiveNote = () => {
 const handleNoteSave = () => {
   const newNote = {
     title: noteTitle.value,
-    text: noteText.value
+    text: noteText.value,
+    id: uuidv4() // Generate a unique ID for the new note
   };
   saveNote(newNote).then(() => {
     getAndRenderNotes();
@@ -229,3 +230,4 @@ if (window.location.pathname === '/notes') {
 
 console.log('Getting and rendering initial notes...');
 getAndRenderNotes();
+});

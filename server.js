@@ -43,14 +43,53 @@ app.get('/api/notes', (req, res) => {
         res.status(500).json({ error: 'Error reading notes' });
         return;
       }
-      const notes = JSON.parse(data);
-      res.json(notes);
+      let notes;
+    try {
+      notes = JSON.parse(data || '[]'); // If data is empty, parse an empty array as a fallback
+    } catch (parseError) {
+      console.error('Error parsing JSON:', parseError);
+      res.status(500).json({ error: 'Error parsing JSON' });
+      return;
+    }
+
+    res.json(notes);
+  });
+});
+
+// GET request to fetch a specific note by ID
+app.get('/api/notes/:id', (req, res) => {
+    const noteId = req.params.id;
+    fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error reading notes' });
+        return;
+      }
+  
+      let notes;
+      try {
+        notes = JSON.parse(data || '[]'); // If data is empty, parse an empty array as a fallback
+      } catch (parseError) {
+        console.error('Error parsing JSON:', parseError);
+        res.status(500).json({ error: 'Error parsing JSON' });
+        return;
+      }
+  
+      const retrievedNote = notes.find((note) => note.id === noteId);
+  
+      if (retrievedNote) {
+        res.json(retrievedNote);
+      } else {
+        res.status(404).json({ error: 'Note not found' });
+      }
     });
   });
   
   // POST request to add a new note
-  app.post('/api/notes', (req, res) => {
+app.post('/api/notes', (req, res) => {
     const newNote = req.body;
+  
+    console.log('Received new note:', newNote); // Log the received note to verify
   
     fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (err, data) => {
       if (err) {
@@ -59,19 +98,20 @@ app.get('/api/notes', (req, res) => {
         return;
       }
   
-    let notes = JSON.parse(data);
+      let notes = JSON.parse(data);
       // Generate a unique ID for the new note using uuidv4
-    newNote.id = uuidv4();
-    
-    notes.push(newNote);
+      newNote.id = uuidv4();
   
-    fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes), (err) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error saving note' });
-        return;
-      }
-    res.json(newNote);
+      notes.push(newNote);
+  
+      fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes), (err) => {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Error saving note' });
+          return;
+        }
+        console.log('Note saved successfully:', newNote); // Log a success message
+        res.json(newNote);
+      });
     });
-    });
-});
+  });
