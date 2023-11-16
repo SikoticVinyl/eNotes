@@ -23,6 +23,9 @@ When you access the application, you will be able to create, store and re-access
 You can access the deployed Heroku app here: https://stormy-sands-88840-bd75ee7a710b.herokuapp.com/
 with the GitHub Repo here: https://github.com/SikoticVinyl/eNotes
 
+This gif will showcase the basic functionallity of the app that you can expect:
+![Note Gif](public/assets/gif/Note%20Taker.gif)
+
 ## Credits
 
 Starter code for this project was provided by: https://github.com/coding-boot-camp/miniature-eureka
