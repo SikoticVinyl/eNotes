@@ -54,6 +54,8 @@ const deleteNote = (id) =>
   });
 
 const renderActiveNote = () => {
+  console.log('Rendering active note...');
+
   hide(saveNoteBtn);
   hide(clearBtn);
  
@@ -68,6 +70,7 @@ const renderActiveNote = () => {
     noteTitle.value = '';
     noteText.value = '';
   }
+  console.log('Active note:', activeNote);
 };
 
 
@@ -103,6 +106,7 @@ const handleNoteDelete = (e) => {
 // Sets the activeNote and displays it
 const handleNoteView = (e) => {
   e.preventDefault();
+  console.log('Handling note view...');
   
   // Get the clicked note element
   const clickedNoteElement = e.target.closest('li');
@@ -150,6 +154,8 @@ const renderNoteList = async (notes) => {
 
   // Returns HTML element with or without a delete button
   const createLi = (text, delBtn = true) => {
+    try {
+      console.log('Rendering note list...');
     const liEl = document.createElement('li');
     liEl.classList.add('list-group-item');
 
@@ -175,7 +181,10 @@ const renderNoteList = async (notes) => {
     }
 
     return liEl;
-  };
+  } catch (error) {
+    console.error('Error rendering note list:', error);
+  }
+};
 
   if (jsonNotes.length === 0) {
     noteListItems.push(createLi('No saved Notes', false));
@@ -194,13 +203,20 @@ const renderNoteList = async (notes) => {
 };
 
 // Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = () => getNotes().then(renderNoteList);
+const getAndRenderNotes = () => {
+  console.log('Fetching and rendering notes...');
+  getNotes()
+    .then(renderNoteList)
+    .catch((error) => console.error('Error fetching and rendering notes:', error));
+};
 
 if (window.location.pathname === '/notes') {
+  console.log('Adding event listeners...');
   saveNoteBtn.addEventListener('click', handleNoteSave);
   newNoteBtn.addEventListener('click', handleNewNoteView);
   clearBtn.addEventListener('click', renderActiveNote);
   noteForm.addEventListener('input', handleRenderBtns);
 }
 
+console.log('Getting and rendering initial notes...');
 getAndRenderNotes();
