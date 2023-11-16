@@ -1,4 +1,4 @@
-const bodyParser = require('body-parser');
+const { v4: uuidv4 } = require('uuid');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -88,6 +88,8 @@ app.get('/api/notes/:id', (req, res) => {
   // POST request to add a new note
 app.post('/api/notes', (req, res) => {
     const newNote = req.body;
+
+    newNote.id = uuidv4(); //Generate uuid
   
     console.log('Received new note:', newNote); // Log the received note to verify
   
@@ -98,9 +100,7 @@ app.post('/api/notes', (req, res) => {
         return;
       }
   
-      let notes = JSON.parse(data);
-      // Generate a unique ID for the new note using uuidv4
-      newNote.id = uuidv4();
+      let notes = JSON.parse(data || '[]'); // Empty array as fallback
   
       notes.push(newNote);
   
